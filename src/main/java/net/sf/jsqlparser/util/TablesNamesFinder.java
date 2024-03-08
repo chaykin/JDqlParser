@@ -176,7 +176,6 @@ import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.upsert.Upsert;
 
-
 /**
  * Find all used tables within an select statement.
  *
@@ -295,7 +294,15 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
             plainSelect.getFromItem().accept(this);
         }
 
-        visitJoins(plainSelect.getJoins());
+        if (plainSelect.getJoins() != null) {
+            for (Join join : plainSelect.getJoins()) {
+                join.getFromItem().accept(this);
+                join.getRightItem().accept(this);
+                for (Expression expression : join.getOnExpressions()) {
+                    expression.accept(this);
+                }
+            }
+        }
         if (plainSelect.getWhere() != null) {
             plainSelect.getWhere().accept(this);
         }
@@ -800,7 +807,15 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
             }
         }
 
-        visitJoins(delete.getJoins());
+        if (delete.getJoins() != null) {
+            for (Join join : delete.getJoins()) {
+                join.getFromItem().accept(this);
+                join.getRightItem().accept(this);
+                for (Expression expression : join.getOnExpressions()) {
+                    expression.accept(this);
+                }
+            }
+        }
 
         if (delete.getWhere() != null) {
             delete.getWhere().accept(this);
@@ -1018,26 +1033,6 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     @Override
     public void visit(ParenthesedFromItem parenthesis) {
         parenthesis.getFromItem().accept(this);
-        // support join keyword in fromItem
-        visitJoins(parenthesis.getJoins());
-    }
-
-    /**
-     * visit join block
-     *
-     * @param parenthesis join sql block
-     */
-    private void visitJoins(List<Join> parenthesis) {
-        if (parenthesis == null) {
-            return;
-        }
-        for (Join join : parenthesis) {
-            join.getFromItem().accept(this);
-            join.getRightItem().accept(this);
-            for (Expression expression : join.getOnExpressions()) {
-                expression.accept(this);
-            }
-        }
     }
 
     @Override

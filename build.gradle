@@ -64,7 +64,7 @@ def getVersion = { boolean considerSnapshot ->
 }
 
 // for publishing a release, call Gradle with Environment Variable RELEASE:
-// RELEASE=true gradle JSQLParser:publish
+//      RELEASE=true gradle JSQLParser:publish
 version = getVersion( !System.getenv("RELEASE") )
 group = 'com.github.jsqlparser'
 description = 'JSQLParser library'
@@ -139,14 +139,6 @@ javadoc {
         options.addBooleanOption('html5', true)
     }
     options.addBooleanOption("Xdoclint:none", true)
-}
-
-jar {
-    manifest {
-        attributes (
-            "Automatic-Module-Name": "net.sf.jsqlparser"
-        )
-    }
 }
 
 tasks.register('xmldoc', Javadoc) {
@@ -306,7 +298,7 @@ pmd {
 
 checkstyle {
     sourceSets = [sourceSets.main, sourceSets.test]
-    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    configFile =rootProject.file('config/checkstyle/checkstyle.xml')
 }
 
 spotless {
@@ -548,14 +540,22 @@ publishing {
     repositories {
         maven {
             name "ossrh"
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl= "https://oss.sonatype.org/content/repositories/snapshots/"
+
+            def releasesRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            def snapshotsRepoUrl= "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            //credentials(PasswordCredentials)
             credentials {
                 username = System.getenv("ossrhUsername")
                 password = System.getenv("ossrhPassword")
             }
         }
+//        maven {
+//            name = "GitHubPackages"
+//
+//            url = uri("https://maven.pkg.github.com/JSQLParser/jsqlparser")
+//            credentials(PasswordCredentials)
+//        }
     }
 }
 
@@ -563,11 +563,7 @@ signing {
     //def signingKey = findProperty("signingKey")
     //def signingPassword = findProperty("signingPassword")
     //useInMemoryPgpKeys(signingKey, signingPassword)
-
-    // don't sign SNAPSHOTS
-    if (!version.endsWith('SNAPSHOT')) {
-        sign publishing.publications.mavenJava
-    }
+    sign publishing.publications.mavenJava
 }
 
 tasks.withType(JavaCompile).configureEach {

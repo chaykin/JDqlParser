@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
-public class MergeInsert implements Serializable, MergeOperation {
+public class MergeInsert implements Serializable {
 
     private Expression andPredicate;
     private ExpressionList<Column> columns;
@@ -55,11 +55,6 @@ public class MergeInsert implements Serializable, MergeOperation {
 
     public void setWhereCondition(Expression whereCondition) {
         this.whereCondition = whereCondition;
-    }
-
-    @Override
-    public void accept(MergeOperationVisitor mergeOperationVisitor) {
-        mergeOperationVisitor.visit(this);
     }
 
     @Override

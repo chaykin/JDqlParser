@@ -15,7 +15,6 @@ import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.statement.select.AllTableColumns;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectVisitorAdapter;
@@ -241,31 +240,5 @@ public class ExpressionVisitorAdapterTest {
         CCJSqlParserUtil.parseExpression(
                 "CAST(ROW(dataid, value, calcMark) AS ROW(datapointid CHAR, value CHAR, calcMark CHAR))")
                 .accept(adapter);
-    }
-
-    @Test
-    public void testAllTableColumns() throws JSQLParserException {
-        PlainSelect plainSelect = (PlainSelect) CCJSqlParserUtil.parse("select a.* from foo a");
-        final AllTableColumns[] holder = new AllTableColumns[1];
-        Expression from = plainSelect.getSelectItems().get(0).getExpression();
-        from.accept(new ExpressionVisitorAdapter() {
-
-            @Override
-            public void visit(AllTableColumns all) {
-                holder[0] = all;
-            }
-        });
-
-        assertNotNull(holder[0]);
-        assertEquals("a.*", holder[0].toString());
-    }
-
-    @Test
-    public void testAnalyticExpressionWithPartialWindowElement() throws JSQLParserException {
-        ExpressionVisitorAdapter adapter = new ExpressionVisitorAdapter();
-        Expression expression = CCJSqlParserUtil.parseExpression(
-                "SUM(\"Spent\") OVER (PARTITION BY \"ID\" ORDER BY \"Name\" ASC ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)");
-
-        expression.accept(adapter);
     }
 }

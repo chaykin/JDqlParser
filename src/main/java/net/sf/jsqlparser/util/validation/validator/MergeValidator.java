@@ -10,14 +10,14 @@
 package net.sf.jsqlparser.util.validation.validator;
 
 import net.sf.jsqlparser.parser.feature.Feature;
-import net.sf.jsqlparser.statement.merge.*;
+import net.sf.jsqlparser.statement.merge.Merge;
 import net.sf.jsqlparser.statement.update.UpdateSet;
 import net.sf.jsqlparser.util.validation.ValidationCapability;
 
 /**
  * @author gitmotte
  */
-public class MergeValidator extends AbstractValidator<Merge> implements MergeOperationVisitor {
+public class MergeValidator extends AbstractValidator<Merge> {
 
 
     @Override
@@ -26,32 +26,20 @@ public class MergeValidator extends AbstractValidator<Merge> implements MergeOpe
             validateFeature(c, Feature.merge);
         }
         validateOptionalExpression(merge.getOnCondition());
-        if (merge.getOperations() != null) {
-            merge.getOperations().forEach(operation -> operation.accept(this));
+        // validateOptionalExpression(merge.getFromItem());
+        if (merge.getMergeInsert() != null) {
+            validateOptionalExpressions(merge.getMergeInsert().getColumns());
+            validateOptionalExpressions(merge.getMergeInsert().getValues());
+        }
+        if (merge.getMergeUpdate() != null) {
+            for (UpdateSet updateSet : merge.getMergeUpdate().getUpdateSets()) {
+                validateOptionalExpressions(updateSet.getColumns());
+                validateOptionalExpressions(updateSet.getValues());
+            }
+            validateOptionalExpression(merge.getMergeUpdate().getDeleteWhereCondition());
+            validateOptionalExpression(merge.getMergeUpdate().getWhereCondition());
         }
         validateOptionalFromItems(merge.getFromItem());
     }
 
-    @Override
-    public void visit(MergeDelete mergeDelete) {
-        validateOptionalExpression(mergeDelete.getAndPredicate());
-    }
-
-    @Override
-    public void visit(MergeUpdate mergeUpdate) {
-        validateOptionalExpression(mergeUpdate.getAndPredicate());
-        for (UpdateSet updateSet : mergeUpdate.getUpdateSets()) {
-            validateOptionalExpressions(updateSet.getColumns());
-            validateOptionalExpressions(updateSet.getValues());
-        }
-        validateOptionalExpression(mergeUpdate.getDeleteWhereCondition());
-        validateOptionalExpression(mergeUpdate.getWhereCondition());
-    }
-
-    @Override
-    public void visit(MergeInsert mergeInsert) {
-        validateOptionalExpression(mergeInsert.getAndPredicate());
-        validateOptionalExpressions(mergeInsert.getColumns());
-        validateOptionalExpressions(mergeInsert.getValues());
-    }
 }

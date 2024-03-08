@@ -10,7 +10,7 @@
 package net.sf.jsqlparser.statement.create.view;
 
 public enum TemporaryOption {
-    NONE, TEMP, TEMPORARY, VOLATILE;
+    NONE, TEMP, TEMPORARY;
 
     public static TemporaryOption from(String option) {
         return Enum.valueOf(TemporaryOption.class, option.toUpperCase());

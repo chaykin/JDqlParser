@@ -68,10 +68,6 @@ public class AlterExpression implements Serializable {
 
     private boolean useBrackets = false;
 
-    private String truncatePartitionName = null;
-
-    private boolean useIfNotExists = false;
-
     public Index getOldIndex() {
         return oldIndex;
     }
@@ -406,32 +402,6 @@ public class AlterExpression implements Serializable {
         this.uk = uk;
     }
 
-    public String getTruncatePartitionName() {
-        return truncatePartitionName;
-    }
-
-    public void setTruncatePartitionName(String truncatePartitionName) {
-        this.truncatePartitionName = truncatePartitionName;
-    }
-
-    public AlterExpression withTruncatePartitionName(String truncatePartitionName) {
-        this.truncatePartitionName = truncatePartitionName;
-        return this;
-    }
-
-    public boolean isUseIfNotExists() {
-        return useIfNotExists;
-    }
-
-    public void setUseIfNotExists(boolean useIfNotExists) {
-        this.useIfNotExists = useIfNotExists;
-    }
-
-    public AlterExpression withUserIfNotExists(boolean userIfNotExists) {
-        this.useIfNotExists = userIfNotExists;
-        return this;
-    }
-
     @Override
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity",
             "PMD.ExcessiveMethodLength", "PMD.SwitchStmtsShouldHaveDefault"})
@@ -471,9 +441,6 @@ public class AlterExpression implements Serializable {
                 && !pkColumns.isEmpty()) {
             // Oracle Multi Column Drop
             b.append("DROP (").append(PlainSelect.getStringList(pkColumns)).append(')');
-        } else if (operation == AlterOperation.TRUNCATE_PARTITION
-                && truncatePartitionName != null) {
-            b.append("TRUNCATE PARTITION ").append(truncatePartitionName);
         } else {
             if (operation == AlterOperation.COMMENT_WITH_EQUAL_SIGN) {
                 b.append("COMMENT =").append(" ");
@@ -507,10 +474,6 @@ public class AlterExpression implements Serializable {
                 } else {
                     if (hasColumn) {
                         b.append("COLUMN ");
-                    }
-                    if (useIfNotExists
-                            && operation == AlterOperation.ADD) {
-                        b.append("IF NOT EXISTS ");
                     }
                 }
                 if (useBrackets && colDataTypeList.size() == 1) {
@@ -773,8 +736,7 @@ public class AlterExpression implements Serializable {
 
         @Override
         public String toString() {
-            return getColumnName() + (withType ? " TYPE " : getColDataType() == null ? "" : " ")
-                    + toStringDataTypeAndSpec();
+            return getColumnName() + (withType ? " TYPE " : " ") + toStringDataTypeAndSpec();
         }
 
         @Override

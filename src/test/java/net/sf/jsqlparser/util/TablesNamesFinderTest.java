@@ -9,6 +9,17 @@
  */
 package net.sf.jsqlparser.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.List;
+import java.util.Set;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.OracleHint;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
@@ -24,18 +35,6 @@ import net.sf.jsqlparser.test.TestException;
 import net.sf.jsqlparser.test.TestUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.List;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TablesNamesFinderTest {
 
@@ -523,13 +522,4 @@ public class TablesNamesFinderTest {
         Set<String> tableNames6 = TablesNamesFinder.findTables(sqlStr6);
         assertThat(tableNames6).isEmpty();
     }
-
-    @Test
-    void testFromParenthesesJoin() throws JSQLParserException {
-        String sqlStr = "select * from (t1 left join  t2 on t1.id = t2.id) t_select";
-        Set<String> tables = TablesNamesFinder.findTables(sqlStr);
-        assertThat(tables).containsExactly("t1", "t2");
-
-    }
 }
-

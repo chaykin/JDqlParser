@@ -328,7 +328,7 @@ public class ExpressionDeParser extends AbstractDeParser<Expression>
 
     @Override
     public void visit(JdbcParameter jdbcParameter) {
-        buffer.append(jdbcParameter.getParameterCharacter());
+        buffer.append("?");
         if (jdbcParameter.isUseFixedIndex()) {
             buffer.append(jdbcParameter.getIndex());
         }

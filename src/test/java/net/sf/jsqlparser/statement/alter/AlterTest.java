@@ -361,34 +361,6 @@ public class AlterTest {
     }
 
     @Test
-    public void testAlterTableModifyColumn3() throws JSQLParserException {
-        Alter alter =
-                (Alter) CCJSqlParserUtil.parse("ALTER TABLE mytable modify col1 NULL");
-        AlterExpression alterExpression = alter.getAlterExpressions().get(0);
-
-        // COLUMN keyword DOES NOT appear in deparsed statement, modify becomes all caps
-        assertStatementCanBeDeparsedAs(alter, "ALTER TABLE mytable MODIFY col1 NULL");
-
-        assertEquals(AlterOperation.MODIFY, alterExpression.getOperation());
-
-        assertFalse(alterExpression.hasColumn());
-    }
-
-    @Test
-    public void testAlterTableModifyColumn4() throws JSQLParserException {
-        Alter alter =
-                (Alter) CCJSqlParserUtil.parse("ALTER TABLE mytable modify col1 DEFAULT 0");
-        AlterExpression alterExpression = alter.getAlterExpressions().get(0);
-
-        // COLUMN keyword DOES NOT appear in deparsed statement, modify becomes all caps
-        assertStatementCanBeDeparsedAs(alter, "ALTER TABLE mytable MODIFY col1 DEFAULT 0");
-
-        assertEquals(AlterOperation.MODIFY, alterExpression.getOperation());
-
-        assertFalse(alterExpression.hasColumn());
-    }
-
-    @Test
     public void testAlterTableAlterColumn() throws JSQLParserException {
         // http://www.postgresqltutorial.com/postgresql-change-column-type/
         String sql =
@@ -1008,19 +980,5 @@ public class AlterTest {
         assertEquals("UPDATE_DATE_TIME_GMT", type.getColumnName());
         assertEquals("UPDATE_DATE_TIME_GMT SET OPTIONS (allow_commit_timestamp=true)",
                 type.toString());
-    }
-
-    @Test
-    public void testIssue1890() throws JSQLParserException {
-        String stmt =
-                "ALTER TABLE xdmiddle.ft_mid_sop_sms_send_list_daily TRUNCATE PARTITION sum_date";
-        assertSqlCanBeParsedAndDeparsed(stmt);
-    }
-
-    @Test
-    public void testIssue1875() throws JSQLParserException {
-        String stmt =
-                "ALTER TABLE IF EXISTS usercenter.dict_surgeries ADD COLUMN IF NOT EXISTS operation_grade_id int8 NULL";
-        assertSqlCanBeParsedAndDeparsed(stmt);
     }
 }
