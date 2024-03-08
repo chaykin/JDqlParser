@@ -64,11 +64,11 @@ def getVersion = { boolean considerSnapshot ->
 }
 
 // for publishing a release, call Gradle with Environment Variable RELEASE:
-//      RELEASE=true gradle JSQLParser:publish
+//      RELEASE=true gradle JDQLParser:publish
 version = getVersion( !System.getenv("RELEASE") )
-group = 'com.github.jsqlparser'
-description = 'JSQLParser library'
-archivesBaseName = "JSQLParser"
+group = 'com.github.jdqlparser'
+description = 'JDQLParser library'
+archivesBaseName = "JDQLParser"
 
 repositories {
     gradlePluginPortal()
@@ -465,7 +465,7 @@ tasks.register('sphinx', Exec) {
 """
 
     args = [
-            "-Dproject=JSQLParser"
+            "-Dproject=JDQLParser"
             , "-Dcopyright=Tobias Warneke, 2022"
             , "-Dauthor=Tobias Warneke"
             , "-Drelease=${getVersion(false)}"
@@ -492,7 +492,7 @@ publish {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'jsqlparser'
+            artifactId = 'jdqlparser'
 
             from components.java
             versionMapping {
@@ -504,9 +504,9 @@ publishing {
                 }
             }
             pom {
-                name = 'JSQLParser library'
-                description = 'Parse SQL Statements into Abstract Syntax Trees (AST)'
-                url = 'https://github.com/JSQLParser/JSqlParser'
+                name = 'JDQLParser library'
+                description = 'Parse DQL Statements into Abstract Syntax Trees (AST)'
+                url = 'https://github.com/chaykin/JDqlParser'
                 licenses {
                     license {
                         name = 'GNU Library or Lesser General Public License (LGPL) V2.1'
@@ -530,9 +530,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:https://github.com/JSQLParser/JSqlParser.git'
-                    developerConnection = 'scm:git:ssh://git@github.com:JSQLParser/JSqlParser.git'
-                    url = 'https://github.com/JSQLParser/JSqlParser.git'
+                    connection = 'scm:git:https://github.com/chaykin/JDqlParser.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:chaykin/JDqlParser.git'
+                    url = 'https://github.com/chaykin/JDqlParser.git'
                 }
             }
         }
@@ -553,7 +553,7 @@ publishing {
 //        maven {
 //            name = "GitHubPackages"
 //
-//            url = uri("https://maven.pkg.github.com/JSQLParser/jsqlparser")
+//            url = uri("https://maven.pkg.github.com/chaykin/JDqlParser")
 //            credentials(PasswordCredentials)
 //        }
     }
