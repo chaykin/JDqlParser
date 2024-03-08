@@ -1888,12 +1888,14 @@ Table Table() #TableName :
 {
     //String serverName = null, databaseName = null, schemaName = null, tableName = null;
     List<String> data = new ArrayList<String>();
+    boolean all = false;
 }
 {
     data = RelObjectNameList()
+    [ LOOKAHEAD(3) "(" <K_ALL> ")" { all = true; } ]
 
     {
-        Table table = new Table(data);
+        Table table = new Table(data, all);
 		linkAST(table,jjtThis);
         return table;
     }

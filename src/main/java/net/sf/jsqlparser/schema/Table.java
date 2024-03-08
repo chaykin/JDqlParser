@@ -53,6 +53,8 @@ public class Table extends ASTNodeAccessImpl implements FromItem, MultiPartName 
 
     private SQLServerHints sqlServerHints;
 
+    private boolean all;
+
     public Table() {}
 
     public Table(String name) {
@@ -68,6 +70,11 @@ public class Table extends ASTNodeAccessImpl implements FromItem, MultiPartName 
         setName(name);
         setSchemaName(schemaName);
         setDatabase(database);
+    }
+
+    public Table(List<String> partItems, boolean all) {
+        this(partItems);
+        this.all = all;
     }
 
     public Table(List<String> partItems) {
@@ -243,8 +250,12 @@ public class Table extends ASTNodeAccessImpl implements FromItem, MultiPartName 
         return this;
     }
 
+    @Override
     public StringBuilder appendTo(StringBuilder builder) {
         builder.append(getFullyQualifiedName());
+        if (all) {
+            builder.append(" ").append("(ALL)");
+        }
         if (alias != null) {
             builder.append(alias);
         }
@@ -298,5 +309,9 @@ public class Table extends ASTNodeAccessImpl implements FromItem, MultiPartName 
 
     public List<String> getNameParts() {
         return partItems;
+    }
+
+    public boolean isAll() {
+        return all;
     }
 }

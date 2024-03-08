@@ -63,7 +63,14 @@ public class TableTest {
         };
 
         deparser.visit((PlainSelect) select);
+    }
 
+    @Test
+    void tableAllTest() throws JSQLParserException {
+        String dql = "SELECT * FROM MY_TABLE1 (all) T1";
+
+        Select select = (Select) CCJSqlParserUtil.parse(dql);
+        assertEquals("SELECT * FROM MY_TABLE1 (ALL) T1", select.toString());
     }
 
     @Test
