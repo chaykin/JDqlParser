@@ -1805,6 +1805,20 @@ Column Column() #Column :
     }
 }
 
+Expression AnyColumn() :
+{
+	Column column;
+	boolean any = false;
+}
+{
+    [ LOOKAHEAD(1) <K_ANY> {any = true;} ]
+    column = Column()
+
+    {
+    return column.withAny(any);
+    }
+}
+
 /*
 The following tokens are allowed as Names for Schema, Table, Column and Aliases
 */
@@ -3965,8 +3979,7 @@ Expression ComparisonItem() :
 }
 {
   (
-    LOOKAHEAD(3) retval=AnyComparisonExpression()
-    | LOOKAHEAD(3) retval=SimpleExpression()
+    LOOKAHEAD(3) retval=SimpleExpression()
     | LOOKAHEAD(3) retval=ParenthesedExpressionList()
     | LOOKAHEAD(3) retval=RowConstructor()
     | retval=PrimaryExpression()
@@ -3975,23 +3988,6 @@ Expression ComparisonItem() :
    {
       return retval;
    }
-}
-
-Expression AnyComparisonExpression() :
-{
-    AnyType anyType;
-    Select select;
-}
-{
-    (
-        <K_ANY> { anyType = AnyType.ANY; }
-        | <K_SOME> { anyType = AnyType.SOME; }
-        | <K_ALL> { anyType = AnyType.ALL; }
-    )
-    select = Select()
-    {
-      return new AnyComparisonExpression(anyType, select);
-    }
 }
 
 Expression SimpleExpression():
@@ -4255,7 +4251,7 @@ Expression PrimaryExpression() #PrimaryExpression:
 
         | LOOKAHEAD(2, {!interrupted}) <K_ALL> { retval = new AllValue(); }
 
-        | LOOKAHEAD(2, {!interrupted}) retval=Column()
+        | LOOKAHEAD(AnyColumn(), {!interrupted}) retval = AnyColumn()
 
         | token=<S_CHAR_LITERAL> { retval = new StringValue(token.image); linkAST(retval,jjtThis); }
 

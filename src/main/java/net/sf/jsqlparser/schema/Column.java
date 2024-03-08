@@ -25,6 +25,8 @@ public class Column extends ASTNodeAccessImpl implements Expression, MultiPartNa
     private String commentText;
     private ArrayConstructor arrayConstructor;
 
+    private boolean any;
+
     public Column() {}
 
     public Column(Table table, String columnName) {
@@ -123,6 +125,10 @@ public class Column extends ASTNodeAccessImpl implements Expression, MultiPartNa
             fqn.append(arrayConstructor);
         }
 
+        if (any) {
+            fqn.insert(0, "ANY ");
+        }
+
         return fqn.toString();
     }
 
@@ -157,11 +163,20 @@ public class Column extends ASTNodeAccessImpl implements Expression, MultiPartNa
         return this;
     }
 
+    public Column withAny(boolean any) {
+        this.any = any;
+        return this;
+    }
+
     public void setCommentText(String commentText) {
         this.commentText = commentText;
     }
 
     public String getCommentText() {
         return commentText;
+    }
+
+    public boolean isAny() {
+        return any;
     }
 }

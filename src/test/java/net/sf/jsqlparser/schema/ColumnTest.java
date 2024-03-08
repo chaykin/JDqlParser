@@ -10,6 +10,10 @@
 package net.sf.jsqlparser.schema;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.select.Select;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -30,4 +34,11 @@ public class ColumnTest {
         assertEquals("anonymous class", myColumn.toString());
     }
 
+    @Test
+    void columnAnyTest() throws JSQLParserException {
+        String dql = "SELECT * FROM MY_TABLE1 WHERE any c1 = 'v'";
+
+        Select select = (Select) CCJSqlParserUtil.parse(dql);
+        assertEquals("SELECT * FROM MY_TABLE1 WHERE ANY c1 = 'v'", select.toString());
+    }
 }
