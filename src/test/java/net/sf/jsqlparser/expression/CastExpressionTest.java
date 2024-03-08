@@ -21,7 +21,10 @@ public class CastExpressionTest {
 
     @Test
     public void testCastToRowConstructorIssue1267() throws JSQLParserException {
-        TestUtils.assertExpressionCanBeParsedAndDeparsed("CAST(ROW(dataid, value, calcMark) AS ROW(datapointid CHAR, value CHAR, calcMark CHAR))", true);
-        TestUtils.assertExpressionCanBeParsedAndDeparsed("CAST(ROW(dataid, value, calcMark) AS testcol)", true);
+        TestUtils.assertExpressionCanBeParsedAndDeparsed(
+                "CAST(ROW(dataid, value, calcMark) AS ROW(datapointid CHAR, value CHAR, calcMark CHAR))",
+                true);
+        TestUtils.assertExpressionCanBeParsedAndDeparsed(
+                "CAST(ROW(dataid, value, calcMark) AS testcol)", true);
     }
 }

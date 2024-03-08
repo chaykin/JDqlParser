@@ -71,7 +71,9 @@ public class Alter implements Statement {
             b.append("ONLY ");
         }
 
-        if (alterExpressions.size()>0 && alterExpressions.get(0).getOperation()==AlterOperation.RENAME_TABLE && alterExpressions.get(0).isUsingIfExists()) {
+        if (alterExpressions.size() > 0
+                && alterExpressions.get(0).getOperation() == AlterOperation.RENAME_TABLE
+                && alterExpressions.get(0).isUsingIfExists()) {
             b.append("IF EXISTS ");
         }
 
@@ -108,13 +110,15 @@ public class Alter implements Statement {
     }
 
     public Alter addAlterExpressions(AlterExpression... alterExpressions) {
-        List<AlterExpression> collection = Optional.ofNullable(getAlterExpressions()).orElseGet(ArrayList::new);
+        List<AlterExpression> collection =
+                Optional.ofNullable(getAlterExpressions()).orElseGet(ArrayList::new);
         Collections.addAll(collection, alterExpressions);
         return this.withAlterExpressions(collection);
     }
 
     public Alter addAlterExpressions(Collection<? extends AlterExpression> alterExpressions) {
-        List<AlterExpression> collection = Optional.ofNullable(getAlterExpressions()).orElseGet(ArrayList::new);
+        List<AlterExpression> collection =
+                Optional.ofNullable(getAlterExpressions()).orElseGet(ArrayList::new);
         collection.addAll(alterExpressions);
         return this.withAlterExpressions(collection);
     }
